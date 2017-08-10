@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -75,7 +74,7 @@
                 for ($i = 1; $i < count($_SESSION['ALBUMS']); $i++) {
                     ?>
                     <figure class="effect-oscar  wowload fadeInUp">
-                        <input type="hidden" value="<?php echo $_SESSION['ALBUMS'][$i]['id']; ?>" id="<?php echo "selectedAlbumId" . $i; ?>">
+                        <input type="hidden" value="<?php echo $_SESSION['ALBUMS'][$i]['id'] . '$' . $_SESSION['ALBUMS'][$i]['name']; ?>" id="<?php echo "selectedAlbumId" . $i; ?>">
                         <img src="<?php echo $_SESSION['ALBUMS'][$i]['picture']['data']['url']; ?>"> 
                         <figcaption>
                             <h5><?php echo $_SESSION['ALBUMS'][$i]['name']; ?></h5>
@@ -87,9 +86,6 @@
                             </p>  
                         </figcaption>
                     </figure>
-
-
-                   
                         <div class="modal fade" id="myModal" role="dialog">
                             <div class="modal-dialog ">
                                 <div class="modal-content">
@@ -123,29 +119,23 @@
 
                             </div>
                         </div>
-                
-
-
-
 
                     <?php
                 } ?>
             </div>
-            <div class="alert alert-success" id="success-alert">
+         <div class="alert alert-success" id="success-alert" style="display: block;">
                 <button type="button" class="close" data-dismiss="alert">x</button>
                 <strong id="msg">Success! </strong>
 
             </div>
             <input type="button" value="Download Selected" class="btn success" onclick="getAlbumId('', 'selectedDownload');" />
             <input type="button" value="Download All" class="btn success" onclick="getAlbumId('', 'allDownload');" />
-            <input type="button" value="Move All" class="btn success" onclick='move_to_picasa("all_albums", "all_albums");' />
+            <input type="button" value="Move Selected" class="btn success" onclick="getAlbumId('', 'selectedMove');" />
+            <input type="button" value="Move All" class="btn success" onclick="getAlbumId('', 'allMove');" />
             <!-- works Ends-->
             <?php
             }
         ?>
-
-
-
     </body>
 </html>
 <script type="text/javascript" charset="utf-8">
@@ -156,8 +146,6 @@
             selectedAlbumIdByChk.push($(this).val());
         });
         return selectedAlbumIdByChk;
-
-
     }
     function get_all_albums() {
         var allAlbumIdByChk = [];
@@ -172,55 +160,68 @@
 
 
     function ajax_link(url) {
+        
+         $.ajax({
+                    type: 'GET',
+                    url: url,
+                     success: function (response) {
+                         alert(response);
+                       // return response;
+                    }
+                    
+                });
+        
+        
 
-        $('.container').loading({
+//        $('.container').loading({
+//
+//            // add an overlay background
+//            overlay: false,
+//
+//            // set fixed width to loading indicator, otherwise calculated relative to element
+//            width: null,
+//
+//            // html template
+//            indicatorHtml: "<div class='js-loading-indicator' style='display: none;'></div>",
+//            overlayHtml: "<div class='js-loading-overlay' style='display: none;'></div>",
+//
+//            // indicator's width/height relative to element
+//            base: 0.9,
+//
+//            // number of indicator circles: maximum is 3
+//            circles: 3,
+//
+//            // position options
+//            top: null,
+//            left: null,
+//
+//            // hide the indicator of the current element
+//            hide: false,
+//
+//            //remove the indicator from the DOM
+//            destroy: false
+//
+//        });
 
-            // add an overlay background
-            overlay: false,
 
-            // set fixed width to loading indicator, otherwise calculated relative to element
-            width: null,
-
-            // html template
-            indicatorHtml: "<div class='js-loading-indicator' style='display: none;'></div>",
-            overlayHtml: "<div class='js-loading-overlay' style='display: none;'></div>",
-
-            // indicator's width/height relative to element
-            base: 0.9,
-
-            // number of indicator circles: maximum is 3
-            circles: 3,
-
-            // position options
-            top: null,
-            left: null,
-
-            // hide the indicator of the current element
-            hide: false,
-
-            //remove the indicator from the DOM
-            destroy: false
-
-        });
-
-
-        $.ajax({
-            url: url,
-            success: function (result) {
-                $("#msg").html(result);
-                // spinner.stop();
-                $("#success-alert").alert();
-                window.setTimeout(function () {
-                    $("#success-alert").alert('close');
-                }, 2000);
-            }
-        });
+//        $.ajax({
+//            url: url,
+//            success: function (result) {
+//               // $("#msg").html(result);
+//                // spinner.stop();
+//                //$("#success-alert").alert();
+//                window.setTimeout(function () {
+//                    $("#success-alert").alert('close');
+//                }, 2000);
+//            }
+//        });
 
     }
 
     // });
     function getAlbumId(id, type)
     {
+       
         switch (type) {
             case "download":
                 var selectedAlbumId = $("#selectedAlbumId" + id).val();
@@ -239,9 +240,22 @@
                 var allAlbumId = get_all_albums();
                 window.location.href = "albumsFunction.php?selectedAlbumId=" + allAlbumId + "&type=" + type;
                 break;
+            case "move":
+                var selectedAlbumId = $("#selectedAlbumId" + id).val();
+                window.location.href = "libs/Google/googleLogin.php?selectedAlbumId=" + selectedAlbumId + "&type=" + type;
+                break;
+            case "selectedMove":
+                var selectedAlbumId = get_selected_albums();
+                if (selectedAlbumId == "") {
+                    alert("NO Album Selected!");
+                } else
+                {
+                    window.location.href = "libs/Google/googleLogin.php?selectedAlbumId=" + selectedAlbumId + "&type=" + type;
+                }
+                break;
             case "allMove":
                 var allAlbumId = get_all_albums();
-                window.location.href = "albumsFunction.php?move=1&selectedAlbumId=" + allAlbumId + "&type=" + type;
+                   window.location.href = "libs/Google/googleLogin.php?selectedAlbumId=" + allAlbumId + "&type=" + type; 
                 break;
             case "slideShow":
                 var selectedAlbumId = $("#selectedAlbumId" + id).val();

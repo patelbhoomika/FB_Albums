@@ -6,16 +6,19 @@ use Facebook\FacebookRequest;
 
 if (isset($_GET['selectedAlbumId']) && $_GET['selectedAlbumId'] <> "") {
     $selectedAlbumId = $_GET['selectedAlbumId'];
-    if ($_GET['type'] == "selectedDownload" || $_GET['type'] == "allDownload") {
+    if ($_GET['type'] == "selectedDownload" || $_GET['type'] == "allDownload" || $_GET['type'] == "allMove") {
         $albumPhotographObject = getAlnumsPhoto_From_FB($selectedAlbumId);
+        //        if (isset($_GET['move'])) {
+        //            $folderName=array("userAlbum1","userAlbums2");
+        //            $parentFolderName="parentFolder";
+        //            $file_tmp_name = array('https://scontent.xx.fbcdn.net/v/t1.0-9/19148900_751316498379430_3735414432256686222_n.jpg?oh=5c60b933b6d1aaa8dffc15a5048979d1&oe=59F7ECA3','https://scontent.xx.fbcdn.net/v/t1.0-9/19149019_751306368380443_4693862114607348708_n.jpg?oh=ac57b628d5b95667344a2b144ff8e87c&oe=59F9DA72');
+        //            header('location:libs/Google/googleLogin.php?folderName=' . $folderName.'&parentFolderName='.$parentFolderName.'&file_tmp_name='.$file_tmp_name);
+        //        } else {
         $album_download_directory = createZip($_GET['selectedAlbumId']);
-        if (isset($_GET['move'])) {
-            header('location:libs/move_to_picasa.php?ajax=1&album_download_directory=' . $album_download_directory);
-        } else {
-            require_once('libs/zipper.php');
-            $zipper = new zipper();
-            echo $zipper->get_zip($album_download_directory);
-        }
+        require_once('libs/zipper.php');
+        $zipper = new zipper();
+        echo $zipper->get_zip($album_download_directory);
+        //        }
     } elseif ($_GET['type'] == "download") {
         $albumPhotographObject = getAlnumsPhoto_From_FB($selectedAlbumId);
         for ($i = 0; $i < count($albumPhotographObject['data']); $i++) {
@@ -88,24 +91,4 @@ function createZip($selectedAlbumId)
         }
     }
     return $album_download_directory;
-}
-
-function getAlnumsPhoto_From_FB($selectedAlbumId)
-{
-    global $fbApp, $fb;
-
-    $albumPhotoReq = new FacebookRequest($fbApp, $_SESSION['ACCESSTOKEN'], 'GET', '/' . $selectedAlbumId . '/photos?fields=source');
-    try {
-        $albumPhotoRes = $fb->getClient()->sendRequest($albumPhotoReq);
-    } catch (Facebook\Exceptions\FacebookResponseException $e) {
-        // When Graph returns an error
-        echo 'Graph returned an error: ' . $e->getMessage();
-        exit;
-    } catch (Facebook\Exceptions\FacebookSDKException $e) {
-        // When validation fails or other local issues
-        echo 'Facebook SDK returned an error: ' . $e->getMessage();
-        exit;
-    }
-    $albumPhotographObject = $albumPhotoRes->getDecodedBody();
-    return $albumPhotographObject;
 }

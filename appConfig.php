@@ -27,3 +27,24 @@ $fb = new Facebook\Facebook([
 $helper = $fb->getRedirectLoginHelper();
 
 $fbApp = new Facebook\FacebookApp('669957856547801', 'dbe135803c63cfeced65c9c656a8c82e');
+
+
+function getAlnumsPhoto_From_FB($selectedAlbumId)
+{
+    global $fbApp, $fb;
+
+    $albumPhotoReq = new FacebookRequest($fbApp, $_SESSION['ACCESSTOKEN'], 'GET', '/' . $selectedAlbumId . '/photos?fields=source');
+    try {
+        $albumPhotoRes = $fb->getClient()->sendRequest($albumPhotoReq);
+    } catch (Facebook\Exceptions\FacebookResponseException $e) {
+        // When Graph returns an error
+        echo 'Graph returned an error: ' . $e->getMessage();
+        exit;
+    } catch (Facebook\Exceptions\FacebookSDKException $e) {
+        // When validation fails or other local issues
+        echo 'Facebook SDK returned an error: ' . $e->getMessage();
+        exit;
+    }
+    $albumPhotographObject = $albumPhotoRes->getDecodedBody();
+    return $albumPhotographObject;
+}
