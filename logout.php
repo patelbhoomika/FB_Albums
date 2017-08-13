@@ -6,5 +6,5 @@ session_unset();
     $_SESSION['ACCESSTOKEN']=  null;
     $_SESSION['ALBUMS']=  null;
     $_SESSION["selectedAlbumId"]=null;
-    $_SESSION['google_session_token']=null;
+    $_SESSION["googleUserName"]=null;
 header("Location: index.php");

@@ -1,6 +1,6 @@
 
 
-body {	color:#fff;font:300 15px/15px Roboto,Arial,Helvetica;background:url(../images/bg.jpg) right no-repeat fixed #fff;background-size: cover; -webkit-font-smoothing:antialiased;}
+body {	font:300 15px/15px Roboto,Arial,Helvetica;background:url(../images/bg.jpg) right no-repeat fixed #fff;background-size: cover; -webkit-font-smoothing:antialiased;}
 
 a{color:#00a9c6; text-decoration:none;}
 a:hover{color:#666;}
@@ -16,7 +16,7 @@ p{font-size:1em;line-height: 1.7em; margin-bottom: 1em;}
 
 .spacer{padding: 6em 0;}
 
-.btn{border:none;border-radius: 0;padding: 1em 4em;background: rgba(0,0,0,0.5);text-transform: uppercase;}
+.btn{border:none;color:#fff;border-radius: 0;padding: 1em 4em;background: rgba(0,0,0,0.5);text-transform: uppercase;}
 .btn:hover,.btn:active{color: #fff;}
 .btn-default{color: #ccc;border: 1px solid #aaa;}
 .btn-default:hover,.btn-default:active{background: rgba(0,0,0,0.8);}

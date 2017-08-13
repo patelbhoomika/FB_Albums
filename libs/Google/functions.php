@@ -1,7 +1,6 @@
 <?php 
 require_once 'google-api-php-client/src/Google/Client.php';
 require_once "google-api-php-client/src/Google/Service/Oauth2.php";
-
 header('Content-Type: text/html; charset=utf-8');
 
 // Get your app info from JSON downloaded from google dev console
@@ -171,63 +170,31 @@ function getUserInfo($credentials)
          * Insert new file in the Application Data folder.
          *
          * @param Google_DriveService $service Drive API service instance.
-         * @param string $title Title of the file to insert, including the extension.
-         * @param string $mimeType MIME type of the file to insert.
-         * @param string $filename Filename of the file to insert.
+         * @param string $albumNameAndPhoto albumName of the file to insert and it's photolink.
          * @param string $parentFolderName ParentFolderName for create folder with user  facebook name.
-         * @param string $folderName FolderName for create folder with user album's name.
          * @return Google_DriveFile The file that was inserted. NULL is returned if an API error occurred.
          */
         function insertFile($service, $albumNameAndPhoto, $parentFolderName)
         {
-            //$file = new Google_Service_Drive_DriveFile();
-
-            // Set the metadata
-            // $file->setTitle($title);
-            //$file->setDescription($description);
-            // Set the file metadata for drive
-            //$file->setMimeType("image/jpeg");
-
-            // Setup the folder you want the file in, if it is wanted in a folder
-            // if (isset($folderName)) {
-            //   if (!empty($folderName)) {
-                   
-            // }
-            //}
             try {
                 
                 // Setup the folder you want the file in, if it is wanted in a folder
                 $parent = new Google_Service_Drive_ParentReference();
                 $parent->setId(getFolderExistsCreate($service, "", $parentFolderName, ""));
-                //print_r($folderName);
+               
                 for ($i=0;$i<count($albumNameAndPhoto);$i++) {
                     $folderName= array_keys($albumNameAndPhoto[$i]);
                     $filename= $albumNameAndPhoto[$i][$folderName[0]];
-                    // print_r($filename);
-                    //print_r($albumNameAndPhoto[$i]['Profile Pictures']);
-                    //exit;
-                    //                    $folder = new Google_Service_Drive_DriveFile();
-                    //                    $folder->setTitle($folderName[$i]);
-                    //                    $folder->setParents(array($parent));
-                    //                    $folder->setMimeType('application/vnd.google-apps.folder');
-                    //
-                    //                    $createdFile = $service->files->insert($folder, array(
-                    //                                            'mimeType' => 'application/vnd.google-apps.folder',
-                    //                                                // 'parents' => array($parentFolderId)
-                    //                                             ));
-                    //                    $childfolder = new Google_Service_Drive_ParentReference();
-                    // $childfolder->setId($childfolder->id);
+                  
                     $childfolder = new Google_Service_Drive_ParentReference();
                     $childfolder->setId(getFolderExistsCreate($service, $folderName[0], "", $parent));
                     
                     for ($j=0;$j<count($filename);$j++) {
                        
                         // Set the metadata
-                        //echo count($filename);
-                        //exit;
+                       
                         $file = new Google_Service_Drive_DriveFile();
                         $file->setTitle("image".$j);
-
                         $file->setMimeType("image/jpeg");
                         $mimeType="image/jpeg";
                         $file->setParents(array($childfolder));
@@ -243,16 +210,18 @@ function getUserInfo($credentials)
                             ));
                     }
                 }
-                   
-                
                
-
-                // Return a bunch of data including the link to the file we just uploaded
-                // return "success";
-                header('location:../../index.php?success=Your Album Move successfully on google drive.');
+                if (isset($_GET['ajax'])=="1") {
+                    echo "Your Album Move successfully on google drive.";
+                } else {
+                    header('location:../../index.php?msg=Your Album Move successfully on google drive.');
+                }
             } catch (Exception $e) {
-                // print "An error occurred: " . $e->getMessage();
-                header('location:../../index.php?success='.$e->getMessage());
+                if (isset($_GET['ajax'])=="1") {
+                    print "An error occurred: " . $e->getMessage();
+                } else {
+                    header('location:../../index.php?msg='.$e->getMessage());
+                }
             }
         }
 
@@ -272,19 +241,8 @@ function getUserInfo($credentials)
             // List all user files (and folders) at Drive root
             $files = $service->files->listFiles();
             $found = "0";
-            //            if ($parentFolderName != null) {
-            //                $folderType=$parentFolderName;
-            //            } else {
-            //                $folderType=$folderName;
-            //                $service->files->delete($fileId);
-            //            }
-            //
-            // Go through each one to see if there is already a folder with the specified name
-            // print_r($files['items']);
-            //exit;
+            
             foreach ($files['items'] as $item) {
-                // echo $item['title'];
-                
                 if ($parentFolderName != null) {
                     if ($item['title'] == $parentFolderName) {
                         $found = "1";
@@ -305,8 +263,6 @@ function getUserInfo($credentials)
             //Create the Folder
                 try {
                     if ($parentFolderName != "") {
-                       
-                        //exit;
                         $folder = new Google_Service_Drive_DriveFile();
                         //Setup the folder to create
                         $folder->setTitle($parentFolderName);
@@ -315,22 +271,15 @@ function getUserInfo($credentials)
                         'mimeType' => 'application/vnd.google-apps.folder'
                          ));
                     } else {
-                       
-                        //exit;
                         $folder = new Google_Service_Drive_DriveFile();
                         $folder->setTitle($folderName);
                         $folder->setParents(array($parentFolderId));
                         $folder->setMimeType('application/vnd.google-apps.folder');
                     
                         $createdFile = $service->files->insert($folder, array(
-                                            'mimeType' => 'application/vnd.google-apps.folder',
-                                                // 'parents' => array($parentFolderId)
+                                            'mimeType' => 'application/vnd.google-apps.folder'
                                              ));
                     }
-                    // $childfolder = new Google_Service_Drive_ParentReference();
-                
-                  
-                
                     // Return the created folder's id
                     return $createdFile->id;
                 } catch (Exception $e) {

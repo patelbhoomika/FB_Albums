@@ -1,4 +1,5 @@
 <?php
+print_r($_GET);exit;
 
 include_once './appConfig.php';
 
