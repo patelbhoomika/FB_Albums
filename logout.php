@@ -1,10 +1,10 @@
 <?php 
 session_start();
 session_unset();
-    $_SESSION['FBID'] = null;
-    $_SESSION['FBNAME'] = null;
-    $_SESSION['ACCESSTOKEN']=  null;
-    $_SESSION['ALBUMS']=  null;
-    $_SESSION["selectedAlbumId"]=null;
-    $_SESSION["googleUserName"]=null;
+    unset($_SESSION['FBID'] );
+    unset($_SESSION['FBNAME'] );
+    unset($_SESSION['ACCESSTOKEN']);
+    unset($_SESSION['ALBUMS']);
+    unset($_SESSION["selectedAlbumId"]);
+    unset($_SESSION['credentials']);
 header("Location: index.php");

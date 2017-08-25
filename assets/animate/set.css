@@ -17,11 +17,11 @@
 }
 
 .grid figure img {
-	position: relative;
+    position: relative;
     display: block;
     max-width: 102%;
     max-height: 291px;
-        min-height: 292px;
+    min-height: 292px;
     min-width: 100%;
     opacity: 1;
         

@@ -45,7 +45,7 @@
                 <div class="caption-wrapper">
                     <div class="caption-info"> 
                         <?php
-                        if (isset($_GET['msg'])) {
+                        if (isset($_SESSION['msg'])) {
                             ?>
                             <script type="text/javascript" charset="utf-8">
                                 $.alert({
@@ -53,17 +53,18 @@
                                     type: 'dark',
                                     animationBounce: 2.5,
                                     animation: 'top',
-                                    content: <?php echo "'" . $_GET['msg'] . "'" ?>
+                                    content: <?php echo "'" . $_SESSION['msg'] . "'" ?>
                                 });
                             </script>
                             <?php
+                            unset($_SESSION['msg']);
                         }
 
 
                         if (!isset($_SESSION['FBID'])) {
                             require_once 'libs/Facebook/autoload.php';
                             $permissions = ['user_photos '];
-                            $loginUrl = $helper->getLoginUrl('http://localhost:99/FB_Albums/fb-callback.php', $permissions);
+                            $loginUrl = $helper->getLoginUrl($fb_login_url, $permissions);
                             echo ' <p class="animated bounceInLeft">Show Download and Move your FACEBOOK Album. </p>';
                             echo '<div class="animated bounceInDown"><a class="btn btn-default " href="' . htmlspecialchars($loginUrl) . '">Log in with Facebook!</a></div>';
                         } else {
@@ -208,7 +209,7 @@
         switch (type) {
             case "download":
                 var selectedAlbumId = $("#selectedAlbumId" + id).val();
-                ajax_link("albumsFunction.php?selectedAlbumId=" + selectedAlbumId + "&type=" + type);
+                ajax_link("albumsAjax.php?selectedAlbumId=" + selectedAlbumId + "&type=" + type);
                 break;
             case "selectedDownload":
                 var selectedAlbumId = get_selected_albums();
@@ -216,12 +217,12 @@
                     alert("NO Album Selected!");
                 } else
                 {
-                    ajax_link("albumsFunction.php?selectedAlbumId=" + selectedAlbumId + "&type=" + type);
+                    ajax_link("albumsAjax.php?selectedAlbumId=" + selectedAlbumId + "&type=" + type);
                 }
                 break;
             case "allDownload":
                 var allAlbumId = get_all_albums();
-                ajax_link("albumsFunction.php?selectedAlbumId=" + allAlbumId + "&type=" + type);
+                ajax_link("albumsAjax.php?selectedAlbumId=" + allAlbumId + "&type=" + type);
                 break;
             case "move":
                 var selectedAlbumId = $("#selectedAlbumId" + id).val();
@@ -244,7 +245,7 @@
                 var selectedAlbumId = $("#selectedAlbumId" + id).val();
                 $.ajax({
                     type: 'GET',
-                    url: "albumsFunction.php?selectedAlbumId=" + selectedAlbumId + "&type=" + type,
+                    url: "albumsAjax.php?selectedAlbumId=" + selectedAlbumId + "&type=" + type,
                     success: function (response) {
                         $('#carousel-inner').html(response);
                         $('#myModal').modal('show');
