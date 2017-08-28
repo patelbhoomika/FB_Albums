@@ -50,7 +50,6 @@ class BasicFunction
 
  function getAlnumsPhoto_From_FB($selectedAlbumId)
 {
-     //print_r($_SESSION['ACCESSTOKEN']);exit;
     if(isset($_SESSION['ACCESSTOKEN']))
     {
         
