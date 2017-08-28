@@ -1,4 +1,4 @@
-Working Demo : Facebook Albums Challenge
+Working Demo : http://ratneshsharma.com/fb_albums/
 How It Work…
 STEP 1 :
 User Login using Facebook credentials. Ask user to give permission to access of email,cover_photo,name and photos. Application fetches user’s all Albums form facebook acccount.
@@ -43,3 +43,10 @@ STEP 1:For GOOGLE
 (3)In https://console.developers.google.com select your created project ->go in Library menu->in G Suit APIs select Drive API and enable it.
 
 ENJOY…
+	
+
+
+
+
+
+
