@@ -142,13 +142,10 @@ class zipper {
     public function make_zip($album_download_directory) {
         $zipfilename = "";
         if (isset($album_download_directory)) {
-            //$zipfilename = 'libs/resources'.DIRECTORY_SEPARATOR.'albums'.DIRECTORY_SEPARATOR.'fb-album_'.date("Y-m-d").'_'.date("H-i-s");
             $zipfilename = 'albums/fb-album_' . date("Y-m-d") . '_' . date("H-i-s");
 
             // name of folder starting from the root of the webserver
-            // as in Wordpress /wp-content/themes/ (end on backslash)
-
-
+           
             $folder = dirname($_SERVER['PHP_SELF']) . '/' . $album_download_directory;
 
             // Server Root

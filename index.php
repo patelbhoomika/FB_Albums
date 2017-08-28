@@ -29,7 +29,7 @@
 
         <!-- custome css -->
         <link rel="stylesheet" href="assets/style.css">
-        
+
         <!-- Msgbox -->
         <link href="assets/msgbox/jquery-confirm.min.css" rel="stylesheet">
         <script src="assets/msgbox/jquery-confirm.min.js"></script>
@@ -62,7 +62,6 @@
 
 
                         if (!isset($_SESSION['FBID'])) {
-                            require_once 'libs/Facebook/autoload.php';
                             $permissions = ['user_photos '];
                             $loginUrl = $helper->getLoginUrl($fb_login_url, $permissions);
                             echo ' <p class="animated bounceInLeft">Show Download and Move your FACEBOOK Album. </p>';
@@ -138,7 +137,8 @@
                     $google_session_token = $_SESSION["googleUserName"];
                 } else {
                     $google_session_token = "unset";
-                } ?>
+                }
+                ?>
             </div>
 
             <input type="button" value="Download Selected" class="btn success" onclick="getAlbumId('', 'selectedDownload');" />
@@ -147,12 +147,12 @@
             <input type="button" value="Move All" class="btn success" onclick="getAlbumId('', 'allMove');" />
             <!-- works Ends-->
             <?php
-            }
+        }
         ?>
     </body>
 </html>
 <script type="text/javascript" charset="utf-8">
-    
+
     function get_selected_albums() {
         var selectedAlbumIdByChk = [];
         $("input:checkbox[name=selectedAlbumIdByChk]:checked").each(function () {
@@ -168,18 +168,26 @@
         return allAlbumIdByChk;
     }
 
-    function ajax_link(url) {
-        $.confirm({
+    function ajax_link(url, type) {
+        var jc = $.confirm({
             animationBounce: 2.5,
             animation: 'top',
             content: function () {
+                jc.buttons.ok.hide();
                 var self = this;
                 return $.ajax({
                     url: url,
                 }).done(function (response) {
-                    self.setType('dark');
-                    self.setContent(response);
-                    self.setTitle(<?php echo "'Hey!  " . $_SESSION['FBNAME'] . "'" ?>);
+                    if (type == "slideShow") {
+                        jc.close();
+                        $('#carousel-inner').html(response);
+                        $('#myModal').modal('show');
+                    } else
+                    {
+                        self.setType('dark');
+                        self.setContent(response);
+                        self.setTitle(<?php echo "'Hey!  " . $_SESSION['FBNAME'] . "'" ?>);
+                    }
                 }).fail(function () {
                     self.setType('dark');
                     self.setContent('Something went wrong.');
@@ -196,10 +204,10 @@
 
         if (google_session_token == "unset")
         {
-            ajax_link("libs/Google/googleLogin.php?ajax=1&selectedAlbumId=" + selectedAlbumId + "&type=" + type);
+            ajax_link("libs/Google/googleLogin.php?ajax=1&selectedAlbumId=" + selectedAlbumId + "&type=" + type, "");
         } else
         {
-            ajax_link("libs/Google/googleLogin.php?ajax=1&selectedAlbumId=" + selectedAlbumId + "&type=" + type);
+            ajax_link("libs/Google/googleLogin.php?ajax=1&selectedAlbumId=" + selectedAlbumId + "&type=" + type, "");
         }
     }
 
@@ -209,7 +217,7 @@
         switch (type) {
             case "download":
                 var selectedAlbumId = $("#selectedAlbumId" + id).val();
-                ajax_link("albumsAjax.php?selectedAlbumId=" + selectedAlbumId + "&type=" + type);
+                ajax_link("albumsAjax.php?selectedAlbumId=" + selectedAlbumId + "&type=" + type, "");
                 break;
             case "selectedDownload":
                 var selectedAlbumId = get_selected_albums();
@@ -217,12 +225,12 @@
                     alert("NO Album Selected!");
                 } else
                 {
-                    ajax_link("albumsAjax.php?selectedAlbumId=" + selectedAlbumId + "&type=" + type);
+                    ajax_link("albumsAjax.php?selectedAlbumId=" + selectedAlbumId + "&type=" + type, "");
                 }
                 break;
             case "allDownload":
                 var allAlbumId = get_all_albums();
-                ajax_link("albumsAjax.php?selectedAlbumId=" + allAlbumId + "&type=" + type);
+                ajax_link("albumsAjax.php?selectedAlbumId=" + allAlbumId + "&type=" + type, "");
                 break;
             case "move":
                 var selectedAlbumId = $("#selectedAlbumId" + id).val();
@@ -243,14 +251,7 @@
                 break;
             case "slideShow":
                 var selectedAlbumId = $("#selectedAlbumId" + id).val();
-                $.ajax({
-                    type: 'GET',
-                    url: "albumsAjax.php?selectedAlbumId=" + selectedAlbumId + "&type=" + type,
-                    success: function (response) {
-                        $('#carousel-inner').html(response);
-                        $('#myModal').modal('show');
-                    }
-                });
+                ajax_link("albumsAjax.php?selectedAlbumId=" + selectedAlbumId + "&type=" + type, "slideShow");
                 break;
             default:
 

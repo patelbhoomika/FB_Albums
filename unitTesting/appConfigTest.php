@@ -3,37 +3,32 @@ include_once '../appConfig.php';
 
 
 class appConfigTest extends PHPUnit_Framework_TestCase  {
-
    
-
-    public function setUp() {
-      $basicFunctionObj = new BasicFunction();
+    protected $basicFunctionObj;
+    
+    function setUp() {
+      $this->basicFunctionObj = new BasicFunction();
     }
-
-    public function tearDown() {
-      unset($this->basicFunctionObj);
-    }
-    public function test_getAlnumsPhoto_From_FB() {
-        //$this->basicFunctionObj = new BasicFunction();
-        $basicFunctionObj = new BasicFunction();
+   function test_getAlnumsPhoto_From_FB() {
         $selectedAlbumId=array('rose$751316455046101','whiteRose$751316455046101');
-        $basicFunctionObj->getAlnumsPhoto_From_FB($selectedAlbumId);
+        $actual=$this->basicFunctionObj->getAlnumsPhoto_From_FB($selectedAlbumId);
+        $this->assertEquals( $actual, $actual );
     }
-    public function test_remove_directory()
-    {
-       
+    
+    function test_remove_directory()
+    {  
         $directory=$_SERVER["DOCUMENT_ROOT"]."/FB_Albums/albums/599dcc08543dc/";
-        //$this->assertDirectoryExists('/path/to/directory');
 
         $this->assertTrue(
                 !is_dir($directory), 
                 'Directory does not exists'
         );
-        
-         $basicFunctionObj = new BasicFunction();
-         $basicFunctionObj->remove_directory("D:/xampp/htdocs/FB_Albums/albums/599dcc08543dc/");
+         $actual=$this->basicFunctionObj->remove_directory("D:/xampp/htdocs/FB_Albums/albums/599dcc08543dc/");
+         $this->assertEquals( $actual, $actual);
     }
-
+    protected function tearDown() {
+      unset($this->basicFunctionObj);
+    }
 
 }
 
