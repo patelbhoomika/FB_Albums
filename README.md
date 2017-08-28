@@ -50,7 +50,7 @@ Working Demo : http://ratneshsharma.com/fb_albums/
 
 #### STEP 1:For FACEBOOK
 
-=> First of all Go on https://developers.facebook.com/=> From menu select Apps->Add a New App->WWW->Give Name an create new app id. => Test version of another -> select No => Choose your category -> clicks Create App ID. => Right-Top corner select skip quick start.
+=> First of all Go on https://developers.facebook.com/  => From menu select Apps->Add a New App->WWW->Give Name an create new app id. => Test version of another -> select No => Choose your category -> clicks Create App ID. => Right-Top corner select skip quick start.
 
 => After that in your app go to Settings Add: -> Namespace -> Contact Email
 
