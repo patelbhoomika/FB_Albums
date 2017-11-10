@@ -7,6 +7,10 @@ use Facebook\FacebookRequest;
 
 function resizeImage($album_photo) {
     $album_photoWithOutHttp = substr($album_photo, -8);
+    if(!file_exists('albums/photo'))
+    {
+         mkdir('albums/photo', 0777);
+    }
     $user_album_photo_dir = 'albums/photo/' . $_SESSION['FBID'];
     if (!file_exists($user_album_photo_dir)) {
         mkdir($user_album_photo_dir, 0777);

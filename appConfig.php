@@ -26,8 +26,8 @@ if ( !defined('ABSPATH') )
    $absPath=$_SERVER["DOCUMENT_ROOT"]."/FB_Albums/";
    define('ABSPATH',$absPath); 
 }
-$app_id='669957856547801';// Replace {app-id} with your app id
-$app_secret="dbe135803c63cfeced65c9c656a8c82e";// Replace {app_secret} with your app id
+$app_id='1396276800489356';// Replace {app-id} with your app id
+$app_secret="df11b88e20b9f16a5685f820ac3561ef";// Replace {app_secret} with your app id
 
 $fb = new Facebook\Facebook([
   'app_id' => $app_id, 
@@ -55,7 +55,7 @@ class BasicFunction
         
     global $fbApp, $fb;
 
-    $albumPhotoReq = new FacebookRequest($fbApp, $_SESSION['ACCESSTOKEN'], 'GET', '/' . $selectedAlbumId . '/photos?fields=source');
+    $albumPhotoReq = new FacebookRequest($fbApp, $_SESSION['ACCESSTOKEN'], 'GET', '/' . $selectedAlbumId . '/photos?fields=source&limit=200');
     try {
         $albumPhotoRes = $fb->getClient()->sendRequest($albumPhotoReq);
     } catch (Facebook\Exceptions\FacebookResponseException $e) {
@@ -68,6 +68,26 @@ class BasicFunction
         exit;
     }
     $albumPhotographObject = $albumPhotoRes->getDecodedBody();
+   // $all_photos=array();
+   
+//        while($albumPhotographObject['data'])
+//        {
+//            $all_photos = array_merge( $all_photos, $albumPhotographObject['data']);
+//            $paging = $albumPhotographObject['paging'];
+//            $next = $paging['next'];
+//
+//            $query = parse_url($next, PHP_URL_QUERY);
+//            parse_str($query, $par); 
+//             $albumPhotoReq1 = new FacebookRequest($fbApp, $_SESSION['ACCESSTOKEN'], 'GET', '/' . $selectedAlbumId . '/photos?fields=source',
+//                     array('limit' => $par['limit'],'after'  => $par['after'] ));
+//             $albumPhotoRes1 = $fb->getClient()->sendRequest($albumPhotoReq1);
+//             $albumPhotographObject1 = $albumPhotoRes1->getDecodedBody();
+//            
+////            $albumPhotographObject = $facebook->api(
+////                $user_id."/photos", 'GET', array(
+////                    'limit' => $par['limit'],
+////                    'until'  => $par['until'] ));
+//        }
     return $albumPhotographObject;
     }
 }

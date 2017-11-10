@@ -62,8 +62,8 @@
 
 
                         if (!isset($_SESSION['FBID'])) {
-                            $permissions = ['user_photos '];
-                            $loginUrl = $helper->getLoginUrl($fb_login_url, $permissions);
+                            $permissions = ['user_photos'];
+                            $loginUrl = $helper->getLoginUrl($fb_login_url,$permissions);
                             echo ' <p class="animated bounceInLeft">Show Download and Move your FACEBOOK Album. </p>';
                             echo '<div class="animated bounceInDown"><a class="btn btn-default " href="' . htmlspecialchars($loginUrl) . '">Log in with Facebook!</a></div>';
                         } else {
@@ -82,7 +82,7 @@
         <div id="works"  class=" clearfix grid">
             <?php
             if (isset($_SESSION['FBID'])) {
-                for ($i = 1; $i < count($_SESSION['ALBUMS']); $i++) {
+                for ($i = 0; $i < count($_SESSION['ALBUMS']); $i++) {
                     ?>
                     <figure class="effect-oscar  wowload fadeInUp">
                         <input type="hidden" value="<?php echo $_SESSION['ALBUMS'][$i]['id'] . '$' . $_SESSION['ALBUMS'][$i]['name']; ?>" id="<?php echo "selectedAlbumId" . $i; ?>">
