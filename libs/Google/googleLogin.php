@@ -62,7 +62,7 @@ $authUrl = getAuthorizationUrl("", "");
                 }
 
                 $albumPhotographObject = $basicFunctionObj->getAlnumsPhoto_From_FB($selectedAlbumData[0]);
-                foreach ($albumPhotographObject['data'] as $album_photo) {
+                foreach ($albumPhotographObject as $album_photo) {
                     $file_tmp_name[] = $album_photo['source'];
                 }
 

@@ -28,12 +28,12 @@ if (isset($_GET['selectedAlbumId']) && $_GET['selectedAlbumId'] <> "") {
     if ($_GET['type'] == "slideShow") {
         $selectedAlbumData = explode('$', $selectedAlbumId);
         $albumPhotographObject = $basicFunctionObj->getAlnumsPhoto_From_FB($selectedAlbumData[0]);
-        $album_resized_photo = resizeImage($albumPhotographObject["data"][0]["source"]);
+        $album_resized_photo = resizeImage($albumPhotographObject[0]["source"]);
         $data = ' <div class="item active">';
         $data .= ' <img src=' . $album_resized_photo . ' class="img-responsive">';
         $data .= ' </div>';
-        for ($i = 1; $i < count($albumPhotographObject['data']); $i++) {
-            $album_resized_photos = resizeImage($albumPhotographObject["data"][$i]["source"]);
+        for ($i = 1; $i < count($albumPhotographObject); $i++) {
+            $album_resized_photos = resizeImage($albumPhotographObject[$i]["source"]);
             $data .= '<div class="item">';
             $data .= ' <img src=' . $album_resized_photos . ' class="img-responsive">';
             $data .= ' </div>';

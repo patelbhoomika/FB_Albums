@@ -55,7 +55,7 @@ class BasicFunction
         
     global $fbApp, $fb;
 
-    $albumPhotoReq = new FacebookRequest($fbApp, $_SESSION['ACCESSTOKEN'], 'GET', '/' . $selectedAlbumId . '/photos?fields=source&limit=200');
+    $albumPhotoReq = new FacebookRequest($fbApp, $_SESSION['ACCESSTOKEN'], 'GET', '/' . $selectedAlbumId . '/photos?fields=source&type=album');
     try {
         $albumPhotoRes = $fb->getClient()->sendRequest($albumPhotoReq);
     } catch (Facebook\Exceptions\FacebookResponseException $e) {
@@ -68,27 +68,51 @@ class BasicFunction
         exit;
     }
     $albumPhotographObject = $albumPhotoRes->getDecodedBody();
-   // $all_photos=array();
-   
-//        while($albumPhotographObject['data'])
+    $all_photos=array();
+    $all_photos = array_merge( $all_photos, $albumPhotographObject['data']);
+    //print_r($albumPhotographObject['paging']);exit;
+    while(isset($albumPhotographObject['paging']['next'])<>null)
+    {
+        //print_r($albumPhotographObject['paging']['cursors']['next']);
+        //echo "dsfs";exit;
+        //print_r($albumPhotographObject['paging']['cursors']);exit;
+        $paging = $albumPhotographObject['paging'];
+        $after = $paging['cursors']['after'];
+        //echo $albumPhotographObject['paging']['next'];exit;
+        $albumPhotoReq = new FacebookRequest($fbApp, $_SESSION['ACCESSTOKEN'], 'GET', '/' . $selectedAlbumId . '/photos?fields=source&type=album&limit=100',
+                     array('limit' => '25','after'  => $after ));
+        $albumPhotoRes = $fb->getClient()->sendRequest($albumPhotoReq);
+        $albumPhotographObject = $albumPhotoRes->getDecodedBody();
+        $all_photos = array_merge( $all_photos, $albumPhotographObject['data']);
+    }
+    
+    
+    
+    
+//   
+//        while($albumPhotographObject['paging']<>null)
 //        {
 //            $all_photos = array_merge( $all_photos, $albumPhotographObject['data']);
 //            $paging = $albumPhotographObject['paging'];
+//            
 //            $next = $paging['next'];
-//
 //            $query = parse_url($next, PHP_URL_QUERY);
 //            parse_str($query, $par); 
 //             $albumPhotoReq1 = new FacebookRequest($fbApp, $_SESSION['ACCESSTOKEN'], 'GET', '/' . $selectedAlbumId . '/photos?fields=source',
 //                     array('limit' => $par['limit'],'after'  => $par['after'] ));
+//             
 //             $albumPhotoRes1 = $fb->getClient()->sendRequest($albumPhotoReq1);
-//             $albumPhotographObject1 = $albumPhotoRes1->getDecodedBody();
+//            // print_r($albumPhotographObject);exit;
+//             $albumPhotographObject = $albumPhotoRes1->getDecodedBody();
 //            
 ////            $albumPhotographObject = $facebook->api(
 ////                $user_id."/photos", 'GET', array(
 ////                    'limit' => $par['limit'],
 ////                    'until'  => $par['until'] ));
 //        }
-    return $albumPhotographObject;
+   
+    
+    return $all_photos;
     }
 }
 function createZip($selectedAlbumId)
@@ -109,8 +133,8 @@ function createZip($selectedAlbumId)
             mkdir($album_directory, 0777);
         }
         $j = 1;
-        foreach ($albumPhotographObject['data'] as $album_photo) {
-            $album_photo = (array) $album_photo;
+        //print_r($albumPhotographObject);exit;
+        foreach ($albumPhotographObject as $album_photo) {
             file_put_contents($album_directory . '/' . $j . ".jpg", fopen($album_photo['source'], 'r'));
             $j++;
         }
@@ -135,3 +159,5 @@ function createZip($selectedAlbumId)
 }  
 
 $basicFunctionObj=new BasicFunction();
+
+
